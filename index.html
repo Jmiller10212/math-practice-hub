@@ -10,7 +10,7 @@
 
 .compare-equation{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;text-align:center}.compare-equation .problem-number{font-size:clamp(19px,3.7vw,36px);letter-spacing:0}.compare-equation select{margin:0;font-size:28px;padding:10px}.compare-progress{height:8px;width:100%;accent-color:var(--accent)}#compare .toolbar label{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#compare .toolbar select{margin:0}@media(max-width:420px){.compare-equation{gap:5px}.compare-equation select{font-size:22px;padding:8px 3px}.compare-equation .problem-number{font-size:18px}}
 </style>
-<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png"><meta name="theme-color" content="#5260ce"><meta name="app-version" content="9ac9eff99a6ead47"></head>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png"><meta name="theme-color" content="#5260ce"><meta name="app-version" content="6edda8414d294334"></head>
 <body><main>
 <header class="brand"><div class="mark" aria-hidden="true">＋</div><div><strong>Math Practice Hub</strong><span class="muted" style="font-size:13px">A little practice. A lot of progress.</span></div></header>
 <section id="home">
@@ -46,8 +46,8 @@
 <div class="toolbar"><label>Number range<select id="compare-range"><option value="thousands">Thousands · 1,000–9,999</option><option value="tenThousands">Ten-thousands · 10,000–99,999</option><option value="hundredThousands">Hundred-thousands · 100,000–999,999</option><option value="millions">Millions · 1,000,000–9,999,999</option><option value="mixed">Mixed · 1,000–9,999,999</option></select></label><label>Round length<select id="compare-length"><option value="5">5 questions</option><option value="10">10 questions</option></select></label><label><input id="compare-equality" type="checkbox"> Include equality questions</label></div>
 <p class="vocab-note">Settings apply to your next round. Start a new round whenever you’re ready.</p>
 <div class="panel"><div class="topline"><strong id="compare-progress-label"></strong><span id="compare-score"></span></div><progress id="compare-progress" class="compare-progress" value="0" max="5" aria-label="Questions completed"></progress>
-<form id="compare-form"><div class="problem compare-equation"><span id="compare-left" class="problem-number"></span><select id="compare-sign" aria-label="Comparison symbol"><option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option></select><span id="compare-right" class="problem-number"></span></div><p class="vocab-note">&gt; greater than · &lt; less than · = equal to</p><div class="actions"><button id="compare-check" class="primary" type="submit">Check answer</button><button id="compare-next" type="button" disabled>Next question →</button><button id="compare-hint-toggle" type="button" aria-expanded="false">Show hint</button></div></form>
-<div id="compare-feedback" class="feedback" role="status" aria-live="polite"></div><div id="compare-hint" class="hint" hidden>Compare the number of digits first. With the same number of digits, compare from left to right until you find a difference. The open side of &gt; or &lt; faces the larger number. Use = only when both numbers have the same value.</div>
+<form id="compare-form"><div class="problem compare-equation"><span id="compare-left" class="problem-number"></span><select id="compare-sign" aria-label="Comparison symbol"><option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option></select><span id="compare-right" class="problem-number"></span></div><div class="actions"><button id="compare-check" class="primary" type="submit">Check answer</button><button id="compare-next" type="button" disabled>Next question →</button><button id="compare-hint-toggle" type="button" aria-expanded="false">Show hint</button></div></form>
+<div id="compare-feedback" class="feedback" role="status" aria-live="polite"></div><div id="compare-hint" class="hint" hidden>Compare the number of digits first. With the same number of digits, compare from left to right until you find a difference.</div>
 <div id="compare-summary" hidden tabindex="-1"></div><div class="actions"><button id="compare-restart" type="button">Start new round ↻</button></div></div><p id="compare-lifetime" class="footer"></p><p id="compare-storage" class="footer">Works entirely offline. Your comparison settings and scores are saved in this browser.</p></section>
 <section id="vocabulary" hidden aria-labelledby="vocab-title">
 <button id="vocab-back" class="quiet">← Home</button><div class="topline"><div><div class="eyebrow" style="margin-top:24px">Learn the language of math</div><h1 id="vocab-title" tabindex="-1">Math Vocabulary Library</h1></div><button id="vocab-add" class="primary">+ Add a term</button></div>
@@ -395,7 +395,9 @@ try{const raw=localStorage.getItem(key);if(raw!==null){const data=JSON.parse(raw
 const comparisonTerms=[
 {id:'compare-greater',name:'Greater Than (>)',definition:'Shows that the number on the left is larger than the number on the right.',example:'8 > 3',aliases:['greater','greater than','>']},
 {id:'compare-less',name:'Less Than (<)',definition:'Shows that the number on the left is smaller than the number on the right.',example:'3 < 8',aliases:['less','less than','<']},
-{id:'compare-equal',name:'Equal To (=)',definition:'Shows that both sides have the same value.',example:'5 = 5',aliases:['equal','equals','equal to','=']}
+{id:'compare-equal',name:'Equal To (=)',definition:'Shows that both sides have the same value.',example:'5 = 5',aliases:['equal','equals','equal to','=']},
+{id:'compare-approximately',name:'Approximately Equal To (≈)',definition:'Shows that two values are close, but do not have to be exactly the same. It means about equal to.',example:'10,498 ≈ 10,500 (rounded to the nearest hundred)',aliases:['approximately','approximately equal','approximately equal to','approximate','about','about equal','almost equal','≈']},
+{id:'compare-not-equal',name:'Not Equal To (≠)',definition:'Shows that the two sides have different values.',example:'5 ≠ 3',aliases:['not equal','not equal to','does not equal','unequal','≠']}
 ].map(t=>({...t,tags:['numberSense','arithmetic','preAlgebra','algebra'],relatedGroup:'Comparing numbers'}));
 function comparisonMatch(t,c){return t.id===c.id||c.aliases.includes(t.name.toLowerCase().trim())||t.name.toLowerCase().trim()===c.name.toLowerCase();}
 for(const c of comparisonTerms)if(!terms.some(t=>comparisonMatch(t,c)))terms.push({...c,tags:[...c.tags]});
@@ -408,7 +410,7 @@ for(const [id,label] of Object.entries(cats)){
 }
 function render(){
  const q=$('vocab-search').value.trim().toLocaleLowerCase(),cat=$('vocab-filter').value;
- const visible=terms.filter(t=>(cat==='all'||t.tags.includes(cat))&&[t.name,t.definition,t.example,searchKeywords(t),relatedGroup(t),quickTip(t)?.tip??'',quickTip(t)?.examples??'',...t.tags.map(c=>cats[c])].join(' ').toLocaleLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
+ const visible=terms.filter(t=>(cat==='all'||t.tags.includes(cat))&&(['=','≈','≠','>','<'].includes(q)?comparisonTerms.some(c=>c.aliases.includes(q)&&comparisonMatch(t,c)):[t.name,t.definition,t.example,searchKeywords(t),relatedGroup(t),quickTip(t)?.tip??'',quickTip(t)?.examples??'',...t.tags.map(c=>cats[c])].join(' ').toLocaleLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));
  const groupOrder=new Map();
  for(const t of visible){const k=groupKey(t);if(k&&!groupOrder.has(k))groupOrder.set(k,t.name);}
  visible.sort((a,b)=>(groupOrder.get(groupKey(a))||a.name).localeCompare(groupOrder.get(groupKey(b))||b.name)||a.name.localeCompare(b.name));
