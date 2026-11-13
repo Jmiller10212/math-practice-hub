@@ -29,7 +29,7 @@ assert(seen.size>3900);
   let browser;
   try{
     browser=await chromium.launch({channel:'msedge',headless:true});const context=await browser.newContext();const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-    await page.goto(url);await page.waitForFunction(()=>navigator.serviceWorker.controller);
+    await page.goto(url);await page.waitForFunction(()=>navigator.serviceWorker.controller);await page.waitForLoadState('networkidle');
     await page.evaluate(()=>localStorage.setItem('rounding-word-problems-sentinel','keep'));
     await page.locator('[data-category="numberSense"]').click();await page.locator('#roundingWordProblems-open').click();
     const el=s=>page.locator('#roundingWordProblems-'+s);
@@ -65,7 +65,7 @@ assert(seen.size>3900);
     await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'modular-hub/tests/rounding-word-problems-mobile.png',fullPage:true});
     await context.setOffline(true);await page.reload();await page.locator('[data-category="numberSense"]').click();await el('open').click();assert(await el('story').isVisible());await el('options').locator('input').first().check();await el('check').click();assert(await el('next').isVisible());assert.equal(await page.evaluate(()=>localStorage.getItem('rounding-word-problems-sentinel')),'keep');assert.deepEqual(errors,[]);
     await context.setOffline(false);
-    const denied=await browser.newContext();await denied.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}});});const fallback=await denied.newPage();await fallback.goto(url);await fallback.waitForFunction(()=>navigator.serviceWorker.controller && document.querySelector('#update-status').textContent.includes('Ready'));await fallback.locator('[data-category="numberSense"]').click();await fallback.locator('#roundingWordProblems-open').click();assert((await fallback.locator('#roundingWordProblems-saved').innerText()).includes('session'));await denied.close();
+    const denied=await browser.newContext();await denied.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}});});const fallback=await denied.newPage();await fallback.goto(url);await fallback.waitForFunction(()=>navigator.serviceWorker.controller && document.querySelector('#update-status').textContent.includes('Ready'));await fallback.waitForLoadState('networkidle');await fallback.locator('[data-category="numberSense"]').click();await fallback.locator('#roundingWordProblems-open').click();assert((await fallback.locator('#roundingWordProblems-saved').innerText()).includes('session'));await denied.close();
     console.log('PASS rounding word problems: exhaustive boundaries, 4,000 generated sets/key checks, 45 UI answers, wrong/empty/duplicate submissions, settings/results persistence, replay, hints, mobile, storage denial, offline subpath gameplay.');
   }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(e=>{console.error(e);process.exitCode=1;});
