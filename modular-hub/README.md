@@ -71,3 +71,5 @@ The service worker downloads the complete HTML/JS/CSS/icon/manifest set before a
 The immutable original is `../backups/pre-modular-20261113-111553/`, containing the original authoritative HTML, publishing tools, guide, complete published assets and Git history. The original Pages repository also has branch `backup/pre-modular-20261113-111553` at `f643e9c`. Refactor work was done separately on `refactor/modular`.
 
 To restore locally, stop editing tasks, preserve any newer work, and copy the original HTML and publishing-tools folder from the backup into the parent folder. For published rollback, make a new commit restoring the original release files from the backup branch, then publish it. Do not force-push or delete browser data. Keep the backup unchanged.
+
+See [HANDOFF-AND-PUBLISHING.md](HANDOFF-AND-PUBLISHING.md) for the source-only handoff, release indicator, verified publishing steps, deployment checks and Mac app updates.
