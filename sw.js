@@ -1,4 +1,4 @@
-const VERSION='29413259e182ea00';
+const VERSION='b0df5cbcfa405881';
 const PREFIX='math-hub-'+self.registration.scope+'-';
 const CACHE=PREFIX+VERSION;
 const ASSETS=['./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./version.json'];
