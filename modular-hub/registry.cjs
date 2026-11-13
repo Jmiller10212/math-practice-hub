@@ -12,6 +12,7 @@ module.exports = [
   require('./games/writeStandard/index.cjs'),
   require('./games/compare/index.cjs'),
   require('./games/rounding/index.cjs'),
+  require('./games/roundingWordProblems/index.cjs'),
   require('./games/detective/index.cjs'),
   require('./games/addition/index.cjs'),
   require('./games/subtraction/index.cjs'),

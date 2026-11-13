@@ -1,0 +1,21 @@
+<section id="roundingWordProblems" hidden aria-labelledby="roundingWordProblems-title">
+  <button id="roundingWordProblems-back" class="quiet">← Back to category</button>
+  <h1 id="roundingWordProblems-title" tabindex="-1">Rounding Word Problems — Find the Original Numbers</h1>
+  <div class="panel">
+    <p>Play five word problems. Select an answer, or all answers that fit, then check. Whole numbers halfway between two tens or hundreds round up.</p>
+    <label for="roundingWordProblems-place">Round to</label>
+    <select id="roundingWordProblems-place"><option value="mixed">Tens and hundreds</option><option value="10">Nearest ten</option><option value="100">Nearest hundred</option></select>
+    <label for="roundingWordProblems-mode">Question type</label>
+    <select id="roundingWordProblems-mode"><option value="mixed">Single-choice and choose-all</option><option value="single">Single-choice</option><option value="multi">Choose all that apply</option></select>
+    <p>Settings apply to your next round.</p>
+    <p id="roundingWordProblems-progress" aria-live="polite"></p>
+    <form id="roundingWordProblems-form">
+      <fieldset id="roundingWordProblems-question"><legend id="roundingWordProblems-story"></legend><p id="roundingWordProblems-instruction"></p><div id="roundingWordProblems-options" style="display:grid;gap:12px"></div></fieldset>
+      <details id="roundingWordProblems-hint"><summary>Show hint</summary><p id="roundingWordProblems-hint-text"></p></details>
+      <div class="actions"><button id="roundingWordProblems-check" class="primary" type="submit">Check answer</button><button id="roundingWordProblems-next" type="button" hidden>Next question →</button></div>
+      <p id="roundingWordProblems-feedback" role="status" tabindex="-1"></p>
+    </form>
+    <div id="roundingWordProblems-summary" hidden><h2>Round complete!</h2><p id="roundingWordProblems-result"></p><button id="roundingWordProblems-replay" class="primary" type="button">Play another five →</button></div>
+    <p id="roundingWordProblems-saved"></p>
+  </div>
+</section>
