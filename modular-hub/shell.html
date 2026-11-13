@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Math Practice Hub</title>
+
+<link rel="stylesheet" href="./assets/hub.css">
+</head>
+<body><main>
+<header class="brand"><div class="mark" aria-hidden="true">＋</div><div><strong>Math Practice Hub</strong><span class="muted" style="font-size:13px">A little practice. A lot of progress.</span></div></header>
+<section id="home">
+<div class="intro"><div class="eyebrow">Your personal practice space</div><h1>Big numbers.<br>Small steps.</h1><p class="muted">Build confidence, one problem at a time. Choose a category, pick a challenge, and go at your own pace.</p></div>
+<aside class="panel vocab-home" aria-labelledby="vocab-home-title"><div class="eyebrow">Your reference shelf</div><h2 id="vocab-home-title">Math Vocabulary Library</h2><p class="muted">Review clear definitions and examples across every category. Search all words, or build your own collection.</p><button id="vocab-home-open" class="primary">Open vocabulary library →</button></aside>
+<div id="continue-panel" class="panel continue-panel" hidden><div class="topline"><div><strong>Continue Practicing</strong><p id="continue-description" class="muted" style="margin:6px 0"></p></div><button id="continue-practice" class="primary">Continue practicing →</button></div></div>
+{{CATEGORY_CARDS}}
+<div class="panel"><div class="topline"><div><strong>Your progress</strong><p class="muted" style="margin:6px 0">Perfect first tries across all activities and levels.</p></div><div id="total" class="stat"></div></div></div>
+</section>
+<section id="category" hidden>
+<button id="category-back" class="quiet">← All categories</button>
+<h1 id="category-title" class="section-title" tabindex="-1"></h1><p id="category-description" class="muted"></p>
+<div class="panel vocab-category"><div class="topline"><div><strong>Vocabulary</strong><p class="muted" style="margin:6px 0">Review the words used in this category.</p></div><button id="vocab-category-open">Review vocabulary →</button></div></div>
+<div id="number-sense-exercises"><label class="search-label" for="exercise-search">Find an exercise</label><input id="exercise-search" class="exercise-search" type="search" placeholder="Search exercises…" autocomplete="off"><div class="cards" id="exercise-cards">{{GAME_CARDS}}</div><p id="search-empty" class="muted" role="status" hidden>No exercises match your search. Try another word.</p></div><div id="arithmetic-exercises" hidden></div>
+<div id="coming-soon" class="panel" hidden><span class="tag">Coming soon</span><h2>More practice is on the way.</h2><p class="muted">For now, explore the exercises in Number Sense.</p><button id="explore-number-sense" class="primary">Explore Number Sense →</button></div>
+</section>
+{{GAME_VIEW}}
+
+
+{{VOCABULARY_VIEW}}
+<footer class="footer"><span id="storage">Works entirely offline. Progress is saved in this browser on this device.</span><details><summary>How scoring & saving work</summary><p>Each problem counts once when you first check a complete set of answers. A perfect first try means the whole answer was correct on that first check. You can fix mistakes and check again; solving a problem after a retry still increases “Solved.” Unchecked problems do not count. Scores are separate for each activity and difficulty, for each decomposition mode, and for each top/bottom size combination in Multiplication. In the Decimal Place Value Quiz and both Decomposing games, choosing an answer immediately scores the question; a correct choice also increases “Solved.”</p><p>Keep using this file in the same browser and location for consistent access to saved progress. Private browsing, clearing browser data, or moving the file may affect saved scores. No information is sent anywhere.</p><button id="reset" class="quiet">Reset all scores</button><span id="reset-message" role="status"></span></details></footer>
+
+{{STANDALONE_VIEWS}}
+</main>
+
+
+
+
+
+<script src="./assets/hub.js"></script>
+</body></html>

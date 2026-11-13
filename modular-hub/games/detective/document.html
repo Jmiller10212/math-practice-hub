@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Digit Detective</title>
+<style>
+:root{font-family:ui-rounded,'Segoe UI',sans-serif;color:#203b43;background:#f4f5ee}*{box-sizing:border-box}body{margin:0}main{max-width:980px;margin:auto;padding:32px 22px}header{display:flex;justify-content:space-between;align-items:center;gap:16px}h1{font-size:clamp(32px,6vw,48px);letter-spacing:-2px;margin:8px 0}p{line-height:1.6}.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:#527466}.badge{background:#e1eadc;padding:8px 14px;border-radius:30px;font-size:13px;white-space:nowrap}.intro{color:#5b6d70;margin:8px 0 24px}.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:22px}select,button{font:inherit}select{padding:10px;border:1px solid #bccbc5;border-radius:10px;background:white}button{cursor:pointer;border:1px solid #b9cac4;background:white;color:#203b43;border-radius:12px;padding:11px 17px;font-weight:650}button:hover{background:#edf3eb}button:focus-visible,select:focus-visible{outline:3px solid #d98234;outline-offset:4px}.layout{display:grid;grid-template-columns:1fr 1.2fr;gap:22px}.panel{background:#fff;border:1px solid #dce4dc;border-radius:24px;padding:26px;box-shadow:0 8px 30px #294b3d06}h2{font-size:20px;margin:0 0 20px}.rules{padding:0;list-style:none;margin:0}.rules li{display:flex;gap:12px;align-items:center;padding:15px 0;border-bottom:1px solid #eef0e9;line-height:1.5}.rules li:last-child{border:0}.rule-number{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#eff3ea;font-size:12px;color:#527466}.slots{display:flex;gap:12px;margin:22px 0 24px}.slot-wrap{flex:1;text-align:center;min-width:0}.slot{width:100%;height:112px;border:2px dashed #a7bdb2;border-radius:16px;background:#f8faf5;font-size:44px;padding:0;color:#214e42}.slot.filled{border-style:solid;background:#e4efe3}.slot.over{background:#fff0db;border-color:#b56a25}.slot-wrap small{display:block;margin-top:10px;color:#607775}.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:18px 0 22px}.card{width:57px;height:72px;padding:0;font-size:30px;border:1px solid #d9c7a9;background:#fff4df;box-shadow:0 4px 0 #e7d9c2}.card.selected{outline:3px solid #ce7c31;transform:translateY(-4px)}.card:disabled{opacity:.28;cursor:default;box-shadow:none}.help{font-size:13px;color:#647773;text-align:center}.actions{display:flex;flex-wrap:wrap;gap:10px}.primary{background:#245c4c;color:white;border-color:#245c4c}.primary:hover{background:#194637}.feedback{margin-top:18px;padding:17px;border-radius:14px;background:#f1f4ed;line-height:1.6}.feedback:empty{display:none}.feedback.good{background:#e1f1df}.feedback.bad{background:#fff0e2}.feedback ul{padding-left:20px;margin-bottom:0}.hint{color:#77501f;font-size:14px;line-height:1.6;margin-top:14px}.footer{font-size:12px;color:#788781;margin-top:22px;text-align:center}@media(max-width:680px){.layout{grid-template-columns:1fr}main{padding:22px 14px}.panel{padding:22px}header{align-items:flex-start}.badge{font-size:11px}.slot{height:95px}}
+</style></head><body><main>
+<header><div><div class="eyebrow">A LITTLE NUMBER MYSTERY</div><h1>Digit Detective</h1></div><span class="badge">Place value &amp; rounding</span></header>
+<p class="intro">Read the clues. Arrange three digit cards. Find the one number that fits.</p>
+<div class="toolbar"><label for="level">Challenge </label><select id="level"><option value="1">1 · Starter mysteries</option><option value="2">2 · Rounding detective</option><option value="3">3 · Clue master</option></select><span id="progress" aria-live="polite"></span></div>
+<div class="layout"><section class="panel"><h2>Your clues</h2><ol class="rules" id="rules"></ol></section>
+<section class="panel"><h2>Build the mystery number</h2><div class="slots" id="slots"></div><div class="help">Drag cards into the slots, or click a card and then a slot.<br>Click a filled slot to return its card. Use each card once.</div><div class="cards" id="cards"></div><div class="actions"><button class="primary" id="check">Check answer</button><button id="clear">Clear</button><button id="hint">Hint</button><button id="new">New puzzle →</button></div><div id="hintText" class="hint" aria-live="polite"></div><div id="feedback" class="feedback" role="status" aria-live="polite"></div></section></div>
+<p class="footer">Three-digit whole numbers • Standard rounding: 5 rounds up • No timer, take your time</p>
+</main><script>
+const rand=n=>Math.floor(Math.random()*n), shuffle=a=>a.slice().sort(()=>Math.random()-.5);
+const digits=n=>[Math.floor(n/100),Math.floor(n/10)%10,n%10];
+const round=(n,p)=>Math.floor((n+p/2)/p)*p;
+function possibilities(cards){const out=[];for(const a of cards)for(const b of cards)for(const c of cards)if(a!==0&&a!==b&&a!==c&&b!==c)out.push(100*a+10*b+c);return out;}
+function makePuzzle(level,previous){
+ for(let attempt=0;attempt<250;attempt++){
+  const cards=shuffle([0,1,2,3,4,5,6,7,8,9]).slice(0,level+3), all=possibilities(cards), answer=all[rand(all.length)];
+  // A rounded result must never print the mystery number itself in a clue.
+  if(answer===previous||[10,100].some(p=>round(answer,p)===answer))continue;
+  const ds=digits(answer), pool=[];
+  function add(text,test,why){pool.push({text,test,why});}
+  for(const p of [10,100]){const r=round(answer,p);add(`${r} is the nearest ${p===10?'ten':'hundred'} when rounding.`,n=>round(n,p)===r,`${answer} rounds to ${r} to the nearest ${p===10?'ten':'hundred'}: the ${p===10?'ones':'tens'} digit is ${p===10?ds[2]:ds[1]}, so round ${ (p===10?ds[2]:ds[1])>=5?'up':'down'}.`);}
+  {add(`The digits add up to ${ds.reduce((a,b)=>a+b,0)}.`,n=>digits(n).reduce((a,b)=>a+b,0)===ds.reduce((a,b)=>a+b,0),`${ds.join(' + ')} = ${ds.reduce((a,b)=>a+b,0)}.`);add(`The number is ${answer%2?'odd':'even'}.`,n=>n%2===answer%2,`The ones digit, ${ds[2]}, makes ${answer} ${answer%2?'odd':'even'}.`);}
+  {for(const [i,j] of [[0,1],[1,2],[0,2]]){const bigger=ds[i]>ds[j];add(`The ${['hundreds','tens','ones'][i]} digit is ${bigger?'greater':'less'} than the ${['hundreds','tens','ones'][j]} digit.`,n=>bigger?digits(n)[i]>digits(n)[j]:digits(n)[i]<digits(n)[j],`${ds[i]} is ${bigger?'greater':'less'} than ${ds[j]}.`);}}
+  const available=shuffle(pool).filter(r=>all.filter(r.test).length>=3);
+  // Every clue must contribute: removing any one must leave multiple answers.
+  // This also rules out puzzles solved by one rounding clue and the card bank.
+  for(let size=3;size<=Math.min(5,available.length);size++){
+   let chosen=null;
+   function search(start,rules){
+    if(chosen)return;
+    if(rules.length===size){
+     if(!rules.some(r=>r.text.includes('rounding')))return;
+     if(all.filter(n=>rules.every(r=>r.test(n))).length!==1)return;
+     if(!rules.every((_,i)=>all.filter(n=>rules.every((r,j)=>i===j||r.test(n))).length>1))return;
+     chosen=rules;return;
+    }
+    for(let i=start;i<available.length;i++)search(i+1,[...rules,available[i]]);
+   }
+   search(0,[]);
+   if(chosen)return {cards:shuffle(cards),answer,rules:shuffle(chosen)};
+  }
+ }throw Error('Could not create puzzle');
+}
+let puzzle, placed=[null,null,null], selected=null, solved=false, wins=0, streak=0,hints=0;
+const $=id=>document.getElementById(id),names=['Hundreds','Tens','Ones'];
+function render(){
+ $('slots').replaceChildren();names.forEach((name,i)=>{const wrap=document.createElement('div');wrap.className='slot-wrap';const btn=document.createElement('button');btn.className='slot'+(placed[i]!==null?' filled':'');btn.textContent=placed[i]??'·';btn.setAttribute('aria-label',`${name} slot${placed[i]!==null?': '+placed[i]:', empty'}`);btn.onclick=()=>{if(selected!==null)put(i,selected);else{placed[i]=null;resetFeedback();render();}};btn.ondragover=e=>{e.preventDefault();btn.classList.add('over');};btn.ondragleave=()=>btn.classList.remove('over');btn.ondrop=e=>{e.preventDefault();const value=e.dataTransfer.getData('text/plain');if(value!==''&&puzzle.cards.includes(Number(value)))put(i,Number(value));};const label=document.createElement('small');label.textContent=name;wrap.append(btn,label);$('slots').append(wrap);});
+ $('cards').replaceChildren();puzzle.cards.forEach(d=>{const b=document.createElement('button');b.className='card'+(selected===d?' selected':'');b.textContent=d;b.setAttribute('aria-label',`Digit ${d}`);b.setAttribute('aria-pressed',String(selected===d));b.disabled=placed.includes(d);b.draggable=!b.disabled;b.onclick=()=>{selected=selected===d?null:d;render();};b.ondragstart=e=>{e.dataTransfer.setData('text/plain',String(d));e.dataTransfer.effectAllowed='move';};$('cards').append(b);});
+}
+function resetFeedback(){$('feedback').textContent='';$('feedback').className='feedback';}
+function put(i,d){if(placed.includes(d))return;if(i===0&&d===0){$('feedback').textContent='A three-digit number cannot start with 0. Try a different card here.';return;}placed[i]=d;selected=null;resetFeedback();render();}
+function fresh(){const previous=puzzle?.answer;puzzle=makePuzzle(Number($('level').value),previous);placed=[null,null,null];selected=null;solved=false;hints=0;resetFeedback();$('hintText').textContent='';$('rules').replaceChildren();puzzle.rules.forEach((r,i)=>{const li=document.createElement('li'),num=document.createElement('span'),label=document.createElement('span');num.className='rule-number';num.textContent=i+1;label.textContent=r.text;li.append(num,label);$('rules').append(li);});render();}
+function check(){resetFeedback();const f=$('feedback');if(placed.includes(null)){f.textContent='Fill all three slots before checking.';return;}const n=placed[0]*100+placed[1]*10+placed[2],ok=puzzle.rules.every(r=>r.test(n));f.className='feedback '+(ok?'good':'bad');const title=document.createElement('strong');title.textContent=ok?`You found it! ${n} fits every clue.`:`${n} doesn’t fit every clue yet. Try again!`;f.append(title);const list=document.createElement('ul');puzzle.rules.forEach(r=>{const li=document.createElement('li');li.textContent=ok?r.why:`${r.test(n)?'✓':'✗'} ${r.text}`;list.append(li);});f.append(list);if(ok&&!solved){solved=true;wins++;streak++;$('progress').textContent=`${wins} solved`;if(streak>=3&&Number($('level').value)<3){const p=document.createElement('p');p.textContent='Ready for more? Try the next challenge level above.';f.append(p);}}}
+if(typeof document!=='undefined'){
+ let stored={};try{stored=JSON.parse(localStorage.getItem('mathPracticeDigitDetective.v1')||'{}');}catch{} wins=Number(stored.wins)||0;$('progress').textContent=`${wins} solved`;$('level').value=['1','2','3'].includes(String(stored.level))?String(stored.level):'1';function saveDetective(){try{localStorage.setItem('mathPracticeDigitDetective.v1',JSON.stringify({wins,level:$('level').value}));}catch{}} document.addEventListener('click',()=>saveDetective());document.addEventListener('change',()=>saveDetective()); $('check').onclick=check;$('new').onclick=fresh;$('clear').onclick=()=>{placed=[null,null,null];selected=null;resetFeedback();render();};$('level').onchange=()=>{streak=0;fresh();};$('hint').onclick=()=>{hints++;$('hintText').textContent=hints===1?'Start with the rounding clue. Which cards could go in the hundreds slot?':`Try ${digits(puzzle.answer)[0]} in the hundreds slot, then use the other clues to arrange the remaining cards.`;};fresh();
+}
+</script></body></html>

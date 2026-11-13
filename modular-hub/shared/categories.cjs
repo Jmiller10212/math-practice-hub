@@ -1,0 +1,2 @@
+// Optional labels and descriptions; new game categories also work without an entry.
+module.exports = {"numberSense":["Number Sense","Place values, expanded form, number words, and decimals."],"arithmetic":["Arithmetic","Build fluency with addition, subtraction, multiplication, and division."],"preAlgebra":["Pre-Algebra","Get ready for variables, patterns, and expressions."],"algebra":["Algebra","Explore equations and grow your problem-solving skills."]};

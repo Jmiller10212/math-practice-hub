@@ -1,0 +1,7 @@
+{
+  "name": "math-practice-hub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {"build": "node build.cjs", "test": "node tests/run.cjs"},
+  "devDependencies": {"playwright": "1.65.0"}
+}

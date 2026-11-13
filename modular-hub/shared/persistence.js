@@ -1,0 +1,11 @@
+const KEY='math-practice-hub-v1';let saved={scores:{},level:6};let storageOK=true;
+try{const data=JSON.parse(localStorage.getItem(KEY));if(data&&typeof data==='object'){saved.level=[3,6,9].includes(data.level)?data.level:6;if(['place','expanded','wordsNumber','numberWords','wordsPlace','decimalQuiz','addition','subtraction','multiplication'].includes(data.lastActivity))saved.lastActivity=data.lastActivity;if(typeof data.includeDecimals==='boolean')saved.includeDecimals=data.includeDecimals;if([1,2,3,4,5].includes(data.decimalDepth))saved.decimalDepth=data.decimalDepth;for(const mode of ['place','expanded','wordsNumber','numberWords','wordsPlace','decimalQuiz','addition','subtraction','multiplication'])for(const level of [3,6,9,'easy','medium','hard']){const key=mode+level,s=data.scores?.[key];if(s&&['perfect','attempted','solved'].every(k=>Number.isSafeInteger(s[k])&&s[k]>=0)&&s.perfect<=s.solved&&s.solved<=s.attempted)saved.scores[key]=s;}}}catch(e){storageOK=false;}
+try{const data=JSON.parse(localStorage.getItem(KEY));for(const [key,s] of Object.entries(data?.scores||{})){if(/^multiplication:(1|2|3|4|mixed|custom):(1|2|3|4|mixed|custom)$/.test(key)&&s&&['perfect','attempted','solved'].every(k=>Number.isSafeInteger(s[k])&&s[k]>=0)&&s.perfect<=s.solved&&s.solved<=s.attempted)saved.scores[key]=s;}}catch(e){storageOK=false;}
+const writeExpandedLevels=['thousands','millions','billions','mixed'];
+try{
+ const data=JSON.parse(localStorage.getItem(KEY));
+ for(const activity of ['writeExpanded','writeStandard'])if(writeExpandedLevels.includes(data?.[activity+'Level']))saved[activity+'Level']=data[activity+'Level'];
+ if(['writeExpanded','writeStandard'].includes(data?.lastActivity))saved.lastActivity=data.lastActivity;
+ for(const activity of ['writeExpanded','writeStandard'])for(const level of writeExpandedLevels){const key=activity+':'+level,s=data?.scores?.[key];if(s&&['perfect','attempted','solved'].every(k=>Number.isSafeInteger(s[k])&&s[k]>=0)&&s.perfect<=s.solved&&s.solved<=s.attempted)saved.scores[key]=s;}
+}catch(e){storageOK=false;}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){storageOK=false;}if(!storageOK)$('storage').textContent='Works entirely offline. Browser storage is unavailable; scores last for this session only.';}

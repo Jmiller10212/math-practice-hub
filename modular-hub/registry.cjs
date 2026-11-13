@@ -1,0 +1,19 @@
+// One line per game. Categories and counts are derived from each module.
+module.exports = [
+  require('./games/place/index.cjs'),
+  require('./games/expanded/index.cjs'),
+  require('./games/wordsNumber/index.cjs'),
+  require('./games/numberWords/index.cjs'),
+  require('./games/wordsPlace/index.cjs'),
+  require('./games/decimalQuiz/index.cjs'),
+  require('./games/decomposeWhole/index.cjs'),
+  require('./games/decomposeWords/index.cjs'),
+  require('./games/writeExpanded/index.cjs'),
+  require('./games/writeStandard/index.cjs'),
+  require('./games/compare/index.cjs'),
+  require('./games/rounding/index.cjs'),
+  require('./games/detective/index.cjs'),
+  require('./games/addition/index.cjs'),
+  require('./games/subtraction/index.cjs'),
+  require('./games/multiplication/index.cjs'),
+];

@@ -1,0 +1,12 @@
+(()=>{
+const status=document.getElementById('update-status'),check=document.getElementById('check-updates'),reload=document.getElementById('reload-update');
+let registration;
+function waiting(){if(registration.waiting){status.textContent='Update ready. Reload when you are ready; your current question will restart.';reload.hidden=false;}}
+let reloading=false;
+navigator.serviceWorker?.addEventListener('controllerchange',()=>{if(!reloading){reloading=true;location.reload();}});
+reload.onclick=()=>{if(registration?.waiting){reload.disabled=true;registration.waiting.postMessage({type:'ACTIVATE_UPDATE'});}};
+async function start(){if(location.protocol==='file:'||!('serviceWorker' in navigator)||!window.isSecureContext){status.textContent='Offline installation requires HTTPS or localhost.';check.disabled=true;return;}
+try{registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});waiting();registration.addEventListener('updatefound',()=>{const worker=registration.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='installed'){waiting();if(!registration.waiting)status.textContent='Ready for offline use.';}if(worker.state==='redundant')status.textContent='Download failed. Your previous offline version is still available.';});});await navigator.serviceWorker.ready;if(!registration.waiting)status.textContent='Ready for offline use.';}catch(e){status.textContent='Offline setup failed. Connect to the internet and try again.';}}
+check.onclick=async()=>{check.disabled=true;status.textContent='Checking for updates…';try{await startIfNeeded();const response=await fetch('./version.json?check='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error();const latest=await response.json();await registration.update();waiting();if(!registration.waiting)status.textContent=latest.version===document.querySelector('meta[name="app-version"]').content?'You have the latest published version.':'Downloading update… Please wait for the reload button.';}catch(e){status.textContent='Could not check for updates. Connect to the internet and try again. Your downloaded version is still available.';}finally{check.disabled=false;}};
+async function startIfNeeded(){if(!registration)await start();if(!registration)throw Error();}
+start();})();
