@@ -14,6 +14,7 @@ function quickTip(t){
  const comparison=comparisonTerms.find(c=>comparisonMatch(t,c));
  if(comparison?.id==='compare-greater')return {tip:'The pointed end of > points right, toward the smaller number. The larger number is on the left; the open side faces it.',examples:'8 > 3 — 8 is greater than 3. The pointed end faces 3.'};
  if(comparison?.id==='compare-less')return {tip:'The pointed end of < points left, toward the smaller number. The smaller number is on the left; the open side faces the larger number on the right.',examples:'3 < 8 — 3 is less than 8. The pointed end faces 3.'};
+ if(expressionMatch(t))return {tip:'An expression represents a value. An equation uses an equals sign to say that two expressions have the same value.',examples:'361 + 544 represents a value; 361 + 544 = 905 states that both sides are equal.'};
  return parityTips[t.id];
 }
 let terms=seeds.map(t=>({...t,tags:[...t.tags]})), editing=null, returnView='home', returnFocus=null, editorFocus=null;
@@ -30,7 +31,15 @@ function comparisonMatch(t,c){return t.id===c.id||c.aliases.includes(t.name.toLo
 for(const c of comparisonTerms)if(!terms.some(t=>comparisonMatch(t,c)))terms.push({...c,tags:[...c.tags]});
 const friendlyNumber={id:'friendly-number',name:'Friendly number',aliases:['friendly numbers','compatible numbers'],definition:'A number chosen because it is easier to calculate with mentally, often a nearby multiple of 2, 5, 10, 100, or 1,000. Friendly numbers are used for estimation and mental arithmetic. Estimates can differ depending on the numbers chosen. A friendly-number estimate is not necessarily standard rounding to a specified place.',example:'525,879 + 251,213 ≈ 525,000 + 250,000 = 775,000. The exact total is 777,092.',tags:['numberSense','arithmetic']};
 if(!terms.some(t=>t.id===friendlyNumber.id))terms.push({...friendlyNumber,tags:[...friendlyNumber.tags]});
-function searchKeywords(t){const own=[t.aliases,t.keywords].flatMap(v=>Array.isArray(v)?v.filter(x=>typeof x==='string'):typeof v==='string'?[v]:[]);return [...own,...comparisonTerms.filter(c=>comparisonMatch(t,c)).flatMap(c=>c.aliases)].join(' ');}
+// Upgrade only the unchanged original starter wording, in memory; keep user edits and stored data intact.
+const expressionEntry=seeds.find(t=>t.id==='seed-31');
+function expressionMatch(t){return t.id===expressionEntry.id||[expressionEntry.name,...expressionEntry.aliases].some(name=>name.toLowerCase()===t.name.toLowerCase().trim());}
+const existingExpression=terms.find(expressionMatch);
+if(!existingExpression)terms.push({...expressionEntry,tags:[...expressionEntry.tags]});
+else if(existingExpression.id===expressionEntry.id&&existingExpression.definition==="A mathematical phrase made of numbers, variables, and operations, without an equals sign stating an equation."&&existingExpression.example==="3x + 2 is an expression."){
+ existingExpression.definition=expressionEntry.definition;existingExpression.example=expressionEntry.example;
+}
+function searchKeywords(t){const own=[t.aliases,t.keywords].flatMap(v=>Array.isArray(v)?v.filter(x=>typeof x==='string'):typeof v==='string'?[v]:[]);return [...own,...(expressionMatch(t)?expressionEntry.aliases:[]),...comparisonTerms.filter(c=>comparisonMatch(t,c)).flatMap(c=>c.aliases)].join(' ');}
 function save(){try{localStorage.setItem(key,JSON.stringify({version:1,terms}));$('vocab-message').textContent='Saved in this browser.';}catch(e){$('vocab-message').textContent='Browser storage is unavailable or full. Your changes will last only for this session.';}}
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
 for(const [id,label] of Object.entries(cats)){

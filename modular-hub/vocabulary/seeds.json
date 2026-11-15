@@ -344,9 +344,9 @@
   },
   {
     "id": "seed-31",
-    "name": "Expression",
-    "definition": "A mathematical phrase made of numbers, variables, and operations, without an equals sign stating an equation.",
-    "example": "3x + 2 is an expression.",
+    "name": "Expression", "aliases": ["mathematical expression", "math expression", "numerical expression", "algebraic expression"],
+    "definition": "A mathematical phrase made of numbers, variables, and operations (such as +, −, ×, ÷) that represents a value, but does not have an equals sign.",
+    "example": "'361 + 544' is an expression; '361 + 544 = 905' is an equation.",
     "tags": [
       "preAlgebra",
       "algebra"
